@@ -16,10 +16,10 @@ let db = new sqlite3.Database(dbPath, (err) => {
   // Create a table if it doesn't exist
   db.run(
     `CREATE TABLE IF NOT EXISTS user (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
-    email TEXT UNIQUE NOT NULL
-  )`,
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL
+    )`,
     (err) => {
       if (err) {
         console.error("Error creating table:", err.message);
@@ -27,14 +27,29 @@ let db = new sqlite3.Database(dbPath, (err) => {
       }
       console.log("Table created or already exists.");
 
-      // Close the database connection
-      db.close((err) => {
-        if (err) {
-          console.error("Error closing database:", err.message);
-        } else {
-          console.log("Database connection closed.");
+      // Insert data after the table has been created or confirmed to exist
+      db.run(
+        `INSERT INTO user (name, email) VALUES (?, ?)`,
+        ["Dan", "dan@yahoo.com"],
+        function (err) {
+          if (err) {
+            console.error("Error inserting data:", err.message);
+            return;
+          }
+          console.log(
+            `A new user has been inserted with rowid ${this.lastID}.`
+          );
+
+          // Close the database connection after the insert
+          db.close((err) => {
+            if (err) {
+              console.error("Error closing database:", err.message);
+            } else {
+              console.log("Database connection closed.");
+            }
+          });
         }
-      });
+      );
     }
   );
 });
