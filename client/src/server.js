@@ -4,6 +4,36 @@ const cors = require("cors");
 const Database = require("./Database.js");
 
 app.use(cors());
+app.use(express.json());
+
+app.post("/initialize-database", (req, res) => {
+  const { dbFilePath } = req.body;
+  const db = new Database(dbFilePath);
+  db.createTable();
+  res.json({ message: "Database initialized" });
+});
+
+// Route to add a new user
+app.post("/users", async (req, res) => {
+  const { name, email, fact, password } = req.body;
+  console.log(name);
+
+  if (!name || !email || !fact || !password) {
+    return res.status(400).json({ error: "Missing required user data" });
+  }
+
+  let db = new Database("./mydb.sqlite");
+
+  try {
+    await db.insertUser(name, email, fact, password);
+    res.json({ message: "User added successfully" });
+  } catch (error) {
+    console.error("Error adding user:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  } finally {
+    db.close(); // Ensure the database connection is closed
+  }
+});
 
 app.get("/users", async (req, res) => {
   let db = new Database("./mydb.sqlite");

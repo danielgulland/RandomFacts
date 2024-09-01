@@ -17,7 +17,9 @@ class Database {
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        age INTEGER NOT NULL
+        email TEXT NOT NULL,
+        password TEXT NOT NULL,
+        fact TEXT NOT NULL
    )`;
 
     this.db.run(createTableQuery, (err) => {
@@ -28,11 +30,11 @@ class Database {
       }
     });
   }
+  //name, email, fact, password
+  insertUser(name, email, fact, password) {
+    const insertQuery = `INSERT INTO users (name, email, fact, password) VALUES (?, ?, ?, ?)`;
 
-  insertUser(name, age) {
-    const insertQuery = `INSERT INTO users (name, age) VALUES (?, ?)`;
-
-    this.db.run(insertQuery, [name, age], function (err) {
+    this.db.run(insertQuery, [name, email, fact, password], function (err) {
       if (err) {
         console.error("Error inserting data", err.message);
       } else {

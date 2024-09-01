@@ -9,14 +9,3 @@ root.render(
     <App />
   </React.StrictMode>
 );
-
-// fetch("http://localhost:3000/users")
-//   .then((response) => {
-//     if (!response.ok) {
-//       throw new error("Network response was not ok");
-//     }
-//     return response.json();
-//   })
-//   .then((data) => {
-//     console.log(data);
-//   });
