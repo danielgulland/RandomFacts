@@ -42,6 +42,9 @@ class Database {
       }
     });
   }
+  //name, email, fact, password
+  insertUser(name, email, fact, password) {
+    const insertQuery = `INSERT INTO users (name, email, fact, password) VALUES (?, ?, ?, ?)`;
 
   //name, email, fact, password
   insertUser(name, email, password) {
