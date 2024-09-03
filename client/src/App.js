@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import AddUser from "./AddUser";
 import Display from "./Display";
+import AddFact from "./AddFact";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -49,11 +50,11 @@ function App() {
         <p>This is a basic React application.</p>
         <AddUser
           isDbInitialized={isDbInitialized}
-          name="Dave"
+          name="nathan"
           email="nathan@yahoo.com"
-          fact="nathan is handsome"
           password="nate12"
         />
+        <AddFact isDbInitialized={isDbInitialized} fact="nathan is handsome" />
       </main>
     </div>
   );

@@ -1,18 +1,21 @@
 import React, { useEffect } from "react";
+import User from "./User";
 
-function AddUser({ isDbInitialized, name, email, fact, password }) {
+function AddUser({ isDbInitialized, name, email, password }) {
+  console.log(`name :' ${name} email : ${email} password : ${password} `);
   useEffect(() => {
     const addUser = async () => {
       if (!isDbInitialized) return;
 
-      try {
-        const userData = {
-          name: name,
-          email: email,
-          fact: fact,
-          password: password,
-        };
+      const userData = {
+        name: name,
+        email: email,
+        password: password,
+      };
 
+      console.log(userData);
+
+      try {
         const response = await fetch("http://localhost:3000/users", {
           method: "POST",
           headers: {
