@@ -1,5 +1,4 @@
 const sqlite3 = require("sqlite3").verbose();
-// const path = require("path");
 
 class Database {
   constructor(dbFilePath) {
@@ -17,7 +16,8 @@ class Database {
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        age INTEGER NOT NULL
+        email TEXT NOT NULL,
+        password TEXT NOT NULL
    )`;
 
     this.db.run(createTableQuery, (err) => {
@@ -27,12 +27,27 @@ class Database {
         console.log("Table created or already exists.");
       }
     });
+
+    const createFactTableQuery = `
+    CREATE TABLE IF NOT EXISTS facts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      fact TEXT NOT NULL
+ )`;
+
+    this.db.run(createFactTableQuery, (err) => {
+      if (err) {
+        console.error("Error creating table", err.message);
+      } else {
+        console.log("Table created or already exists.");
+      }
+    });
   }
 
-  insertUser(name, age) {
-    const insertQuery = `INSERT INTO users (name, age) VALUES (?, ?)`;
+  //name, email, fact, password
+  insertUser(name, email, password) {
+    const insertQuery = `INSERT INTO users (name, email, password) VALUES (?, ?, ?)`;
 
-    this.db.run(insertQuery, [name, age], function (err) {
+    this.db.run(insertQuery, [name, email, password], function (err) {
       if (err) {
         console.error("Error inserting data", err.message);
       } else {
@@ -52,6 +67,19 @@ class Database {
           resolve(rows); // Resolve the promise with the rows data
         }
       });
+    });
+  }
+
+  //name, email, fact, password
+  insertFact(fact) {
+    const insertQuery = `INSERT INTO facts (fact) VALUES (?)`;
+
+    this.db.run(insertQuery, [fact], function (err) {
+      if (err) {
+        console.error("Error inserting data", err.message);
+      } else {
+        console.log(`Fact added with ID: ${this.lastID}`);
+      }
     });
   }
 
