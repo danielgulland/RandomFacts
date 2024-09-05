@@ -6,9 +6,10 @@ const Database = require("./Database.js");
 app.use(cors());
 app.use(express.json());
 
+const dbFilePath = "./mydb.sqlite";
+const db = new Database(dbFilePath);
+
 app.post("/initialize-database", (req, res) => {
-  const { dbFilePath } = req.body;
-  const db = new Database(dbFilePath);
   db.createTable();
   res.json({ message: "Database initialized" });
 });
@@ -16,13 +17,10 @@ app.post("/initialize-database", (req, res) => {
 // Route to add a new user
 app.post("/users", async (req, res) => {
   const { name, email, password } = req.body;
-  console.log(name);
 
   if (!name || !email || !password) {
     return res.status(400).json({ error: "Missing required user data" });
   }
-
-  let db = new Database("./mydb.sqlite");
 
   try {
     await db.insertUser(name, email, password);
@@ -30,14 +28,10 @@ app.post("/users", async (req, res) => {
   } catch (error) {
     console.error("Error adding user:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    db.close(); // Ensure the database connection is closed
   }
 });
 
 app.get("/users", async (req, res) => {
-  let db = new Database("./mydb.sqlite");
-
   try {
     // Await the promise returned by getUsers
     const users = await db.getUsers();
@@ -45,29 +39,47 @@ app.get("/users", async (req, res) => {
   } catch (error) {
     console.error("Error fetching users:", error.message);
     res.status(500).json({ error: "Internal Server Error" }); // Send error response
-  } finally {
-    db.close(); // Ensure the database connection is closed
   }
 });
 
 //add new fact
 app.post("/fact", async (req, res) => {
-  let { fact } = req.body;
+  //extracts fact and userId from the req.body and creates variables with the same name
+  let { fact, userId } = req.body;
 
   if (!fact) {
     return res.status(400).json({ error: "Missing required fact data" });
   }
 
-  let db = new Database("./mydb.sqlite");
-
   try {
-    await db.insertFact(fact);
+    await db.insertFact(fact, userId);
     res.json({ message: "Fact added successfully" });
   } catch (error) {
     console.error("Error adding fact:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
-  } finally {
-    db.close(); // Ensure the database connection is closed
+  }
+});
+
+//delete fact
+app.delete("/delete-fact/:id", (req, res) => {
+  const userId = req.params.id;
+  console.log(userId);
+
+  db.deleteFact(userId)
+    .then((result) => res.json(result)) // Send success message as JSON
+    .catch((err) => res.status(500).json({ error: err.message })); // Handle errors
+});
+
+//This event is emitted when the Node.js process is about to exit "exit"
+process.on("exit", (code) => {
+  if (db) {
+    db.close((err) => {
+      if (err) {
+        console.error("Error closing database:", err.message);
+      } else {
+        console.log("Database connection closed.");
+      }
+    });
   }
 });
 
