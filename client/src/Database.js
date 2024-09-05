@@ -31,7 +31,9 @@ class Database {
     const createFactTableQuery = `
     CREATE TABLE IF NOT EXISTS facts (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      fact TEXT NOT NULL
+      fact TEXT NOT NULL,
+      user_id INTEGER,
+      FOREIGN KEY (user_id) REFERENCES users(id)
  )`;
 
     this.db.run(createFactTableQuery, (err) => {
@@ -71,15 +73,31 @@ class Database {
   }
 
   //name, email, fact, password
-  insertFact(fact) {
-    const insertQuery = `INSERT INTO facts (fact) VALUES (?)`;
+  insertFact(fact, userId) {
+    const insertQuery = `INSERT INTO facts (fact, user_id) VALUES (?, ?)`;
 
-    this.db.run(insertQuery, [fact], function (err) {
+    this.db.run(insertQuery, [fact, userId], function (err) {
       if (err) {
         console.error("Error inserting data", err.message);
       } else {
         console.log(`Fact added with ID: ${this.lastID}`);
       }
+    });
+  }
+
+  deleteFact(userId) {
+    const deleteQuery = `DELETE FROM facts WHERE user_id = ?`;
+
+    return new Promise((resolve, reject) => {
+      this.db.run(deleteQuery, [userId], function (err) {
+        if (err) {
+          reject(err); // Reject the promise with the error
+        } else if (this.changes === 0) {
+          resolve({ message: "Fact not found" }); // Resolve with a message if no rows were deleted
+        } else {
+          resolve({ message: "Fact deleted successfully" }); // Resolve with a success message
+        }
+      });
     });
   }
 

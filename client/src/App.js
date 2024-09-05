@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AddUser from "./AddUser";
 import Display from "./Display";
 import AddFact from "./AddFact";
+import DeleteFact from "./DeleteFact";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -48,13 +49,19 @@ function App() {
     <div className="App">
       <main>
         <p>This is a basic React application.</p>
-        <AddUser
+        {/* <AddUser
           isDbInitialized={isDbInitialized}
           name="nathan"
           email="nathan@yahoo.com"
           password="nate12"
         />
-        <AddFact isDbInitialized={isDbInitialized} fact="nathan is handsome" />
+        <AddFact
+          isDbInitialized={isDbInitialized}
+          fact="nathan is handsome"
+          userId={2}
+        />{" "} */}
+        //once you login you should have the userId available
+        <DeleteFact isDbInitialized={isDbInitialized} userId={2} />
       </main>
     </div>
   );
