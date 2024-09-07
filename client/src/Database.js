@@ -85,6 +85,21 @@ class Database {
     });
   }
 
+  getFact(userId) {
+    console.log(userId);
+    const getQuery = `SELECT * FROM facts WHERE user_id = ?`;
+
+    return new Promise((resolve, reject) => {
+    this.db.all(getQuery, [userId], function (err, rows) {
+      if (err) {
+        console.error("Error getting fact data", err.message);
+        reject(err);
+      }
+      resolve(rows);
+    });
+  });
+  }
+
   deleteFact(userId) {
     const deleteQuery = `DELETE FROM facts WHERE user_id = ?`;
 

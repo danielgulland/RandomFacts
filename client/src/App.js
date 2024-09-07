@@ -3,6 +3,7 @@ import AddUser from "./AddUser";
 import Display from "./Display";
 import AddFact from "./AddFact";
 import DeleteFact from "./DeleteFact";
+import ViewFact from "./ViewFact";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -49,7 +50,7 @@ function App() {
     <div className="App">
       <main>
         <p>This is a basic React application.</p>
-        {/* <AddUser
+        <AddUser
           isDbInitialized={isDbInitialized}
           name="nathan"
           email="nathan@yahoo.com"
@@ -57,11 +58,12 @@ function App() {
         />
         <AddFact
           isDbInitialized={isDbInitialized}
-          fact="nathan is handsome"
+          fact="nathan likes coding"
           userId={2}
-        />{" "} */}
-        //once you login you should have the userId available
-        <DeleteFact isDbInitialized={isDbInitialized} userId={2} />
+        />{" "}
+        <ViewFact isDbInitialized={isDbInitialized} userId={2} />
+        {/* once you login you should have the userId available */}
+        {/* <DeleteFact isDbInitialized={isDbInitialized} userId={2} /> */}
       </main>
     </div>
   );

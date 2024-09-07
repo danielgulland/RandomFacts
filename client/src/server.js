@@ -60,6 +60,24 @@ app.post("/fact", async (req, res) => {
   }
 });
 
+app.get("/fact/:id", async (req, res) => {
+  //params is used instead of query which would get the url from ?=
+  //destructures the object in params but it must match the same name if its id in params it needs to be id in the destructing
+  const {id} = req.params;
+
+  if (!id) {
+    return res.status(400).json({ error: "Missing id to retrieve facts" });
+  }
+
+  try {
+    const facts = await db.getFact(id);
+    res.json(facts);
+  } catch (error) {
+    console.error("Error retrieving facts data:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 //delete fact
 app.delete("/delete-fact/:id", (req, res) => {
   const userId = req.params.id;
