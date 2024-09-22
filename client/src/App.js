@@ -58,8 +58,6 @@ function App() {
         />
         <AddFact
           isDbInitialized={isDbInitialized}
-          fact="nathan likes coding"
-          userId={2}
         />{" "}
         <ViewFact isDbInitialized={isDbInitialized} userId={2} />
         {/* once you login you should have the userId available */}
