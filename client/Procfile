@@ -1,0 +1,2 @@
+web: cd src && npm run start
+api: cd src && node server.js

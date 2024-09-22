@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const Database = require("./Database.js");
+const Database = require("../client/src/Database.js");
 
 app.use(cors());
 app.use(express.json());
@@ -63,7 +63,7 @@ app.post("/fact", async (req, res) => {
 app.get("/fact/:id", async (req, res) => {
   //params is used instead of query which would get the url from ?=
   //destructures the object in params but it must match the same name if its id in params it needs to be id in the destructing
-  const {id} = req.params;
+  const { id } = req.params;
 
   if (!id) {
     return res.status(400).json({ error: "Missing id to retrieve facts" });
@@ -102,7 +102,7 @@ process.on("exit", (code) => {
 });
 
 app.get("/", (req, res) => {
-  res.send("Hello, world!!");
+  res.send("Hello, world!!@");
 });
 
 const PORT = process.env.PORT || 3000;
