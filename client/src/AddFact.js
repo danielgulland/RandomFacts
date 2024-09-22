@@ -1,40 +1,60 @@
 import React, { useEffect } from "react";
-import Fact from './Fact'
+import Fact from "./Fact";
+import { useState } from "react";
 
-function AddFact({ isDbInitialized, fact, userId }) {
-  useEffect(() => {
-    const addFact = async () => {
-      if (!isDbInitialized) return
+function AddFact({ isDbInitialized }) {
+  const [fact, setFact] = useState("");
+  const [userId, setUserId] = useState(""); // Input state for fact
 
-      const factData = {
-        fact: fact,
-        userId: userId
-      };
+  // Function to handle the POST request
+  const handleSubmit = async () => {
+    if (!isDbInitialized) {
+      console.log("Database is not initialized yet.");
+      return;
+    }
 
-      try {
-        const response = await fetch("http://localhost:3000/fact", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(factData),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to add fact");
-        }
-
-      } catch (error) {
-        console.error("Error adding fact:", error);
-      }
+    const factData = {
+      fact: fact,
+      userId: userId,
     };
 
-    addFact();
-  }, [isDbInitialized]);
+    try {
+      // Send the POST request to the server
+      const response = await fetch("http://localhost:3000/fact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(factData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to add fact");
+      }
+
+      console.log("Fact added successfully!");
+    } catch (error) {
+      console.error("Error adding fact:", error);
+    }
+  };
 
   return (
     <div>
-      {isDbInitialized ? "Ready to add facts!" : "Initializing database..."}
+      <h3>Add a Fact</h3>
+      <input
+        type="text"
+        value={userId}
+        onChange={(e) => setUserId(e.target.value)} // Update userId state on input change
+        placeholder="Enter User Id"
+      />
+      <input
+        type="text"
+        value={fact}
+        onChange={(e) => setFact(e.target.value)} // Update fact state on input change
+        placeholder="Enter a fact"
+      />
+      <button onClick={handleSubmit}>Add Fact</button>{" "}
+      {/* Button to trigger fetch call */}
     </div>
   );
 }
