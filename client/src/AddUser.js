@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import User from "./User";
 
 function AddUser({ isDbInitialized, name, email, password }) {
   useEffect(() => {
@@ -33,9 +32,7 @@ function AddUser({ isDbInitialized, name, email, password }) {
   }, [isDbInitialized]);
 
   return (
-    <div>
-      {isDbInitialized ? "Ready to add users!" : "Initializing database..."}
-    </div>
+    <div>{isDbInitialized ? "Ready to add users!" : "Initializing database..."}</div>
   );
 }
 
